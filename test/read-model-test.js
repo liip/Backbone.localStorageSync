@@ -10,6 +10,8 @@ var ID = 'someModelId';
 var PROP = 'foo';
 var VAL = 'bar';
 var ALTVAL = 'foobar';
+var OBJ = {};
+OBJ[PROP] = VAL;
 
 function populateLocalStorage() {
     var obj = {};
@@ -54,7 +56,7 @@ buster.testCase('Read Model', {
         });
     },
 
-    "Requests model from backend even after localStorage hit": function () {
+    "Requests model from backend even after localStorage hit and updates the entry": function () {
         populateLocalStorage();
         var model = this.model;
         var deferred = new Deferred();
@@ -65,6 +67,7 @@ buster.testCase('Read Model', {
         deferred.resolve({foo: ALTVAL});
 
         assert.equals(model.get(PROP), ALTVAL);
+        assert.equals(localStorage.getItem(CLASSNAME + ID), OBJ);
     },
 
 
