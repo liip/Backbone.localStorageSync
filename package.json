@@ -1,0 +1,38 @@
+{
+  "name": "Backbone.localStorageSync",
+  "version": "0.1.0",
+  "author": "Liip <contact@liip.ch>",
+  "description": "A caching layer between the client and server.",
+  "contributors": [ 
+    {
+      "name": "Tobias Ebnöther",
+      "email": "ebi@gorn.ch"
+    } 
+  ],
+  "scripts": {
+    "test": "node_modules/buster/bin/buster-test"
+    },
+  "main": "./backbone.localstoragesync",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liip/Backbone.localStorageSync.git"
+  },
+  "keywords": [
+    "Backbone",
+    "cache",
+    "localStorage",
+    "sync"
+  ],
+  "dependencies" : {
+    "backbone": "*",
+    "underscore": "*",
+    "requirejs": "*",
+    "amdefine": "*",
+    "simply-deferred": "*"
+  },
+  "devDependencies": {
+    "buster":  "*",
+    "localStorage": "*"
+  },
+  "license": "MIT"
+}
