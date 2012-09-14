@@ -1,6 +1,6 @@
 # Backbone localStorage Sync
 
-[![Build Status](https://secure.travis-ci.org/[YOUR_GITHUB_USERNAME]/[YOUR_PROJECT_NAME].png)](http://travis-ci.org/liip/Backbone.localStorageSync)
+[![Build Status](https://secure.travis-ci.org/liip/Backbone.localStorageSync.png)](http://travis-ci.org/liip/Backbone.localStorageSync)
 
 An extension to **Backbone** providing localStorage caching for sync operations
 
