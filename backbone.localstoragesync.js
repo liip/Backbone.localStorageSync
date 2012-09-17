@@ -26,6 +26,7 @@
     return function (originalSync, className, config) {
         config = config || {};
         if (_.isUndefined(config.alwaysUpdate)) { config.alwaysUpdate = true; }
+        if (_.isUndefined(config.prefix)) { config.prefix = ''; }
 
         if (_.isUndefined(JSON)) {
             return originalSync;
@@ -39,12 +40,38 @@
             return originalSync;
         }
 
+        /**
+         * Used to crate a completely qualified name to store and retreive from the local storage
+         *
+         * @param Mixed Can be a model or a string that you want to have the name for.
+         * @return String The final name that is ready to use
+         **/
+        function getName(name) {
+            var ret = config.prefix;
+            if (_.isString(name)) {
+                return ret + name;
+            } else if (_.isUndefined(name.id)) {
+                return ret + className;
+            }
+            return ret + name.id;
+        }
+
+        /**
+         * Returns the JSON Value from the localStorage. Automatically takes care of name prefixes etc.
+         *
+         * @param Mixed Id String or Model that you look for.
+         * @return Object The model data.
+         **/
         function getItem(model) {
-            return JSON.parse(localStorage.getItem(className + model.id));
+            return JSON.parse(localStorage.getItem(getName(model)));
         }
 
         function setItem(model) {
-            localStorage.setItem(className + model.id, model.toJSON());
+            if (model.id) {
+                localStorage.setItem(getName(model), JSON.stringify(model.toJSON()));
+            } else {
+                localStorage.setItem(getName({}), JSON.stringify(model));
+            }
         }
 
         function find(model, options) {
@@ -73,8 +100,36 @@
             return deferred.promise();
         }
 
-        function findAll(model, options) {
-            originalSync('read', model, options);
+        function findAll(collection, options) {
+            var deferred = new Deferred.Deferred();
+            var ids = getItem(collection);
+            var needsFetch = true;
+
+
+            if (null !== ids) {
+                var models = [];
+                _.map(ids, function (id) {
+                    models.push(new collection.model(getItem(id)));
+                });
+                collection.reset(models);
+                deferred.resolve(models);
+                needsFetch = config.alwaysUpdate; //No fetching requires if we don't always update
+            }
+
+            if (needsFetch) {
+                var originalReturn = originalSync('read', collection, options);
+                originalReturn.done(function (result) {
+                    collection.reset(result);
+                    setItem(collection, collection.pluck('id'));
+                });
+
+                //If we couldn't return anything from the cache resolve when the original sync layer does.
+                if (null === ids) {
+                    originalReturn.done(deferred.resolve).fail(deferred.reject);
+                }
+            }
+
+            return deferred.promise();
         }
 
         function create(model, options) {

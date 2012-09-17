@@ -17,7 +17,7 @@ function populateLocalStorage() {
     var obj = {};
     obj.id = ID;
     obj[PROP] = VAL;
-    localStorage.setItem(CLASSNAME + ID, JSON.stringify(obj));
+    localStorage.setItem(ID, JSON.stringify(obj));
 }
 
 buster.testCase('Read Model', {
@@ -67,7 +67,7 @@ buster.testCase('Read Model', {
         deferred.resolve({foo: ALTVAL});
 
         assert.equals(model.get(PROP), ALTVAL);
-        assert.equals(localStorage.getItem(CLASSNAME + ID), OBJ);
+        assert.same(localStorage.getItem(ID), JSON.stringify(model.toJSON()));
     },
 
 
