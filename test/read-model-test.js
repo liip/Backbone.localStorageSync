@@ -5,7 +5,6 @@ var Deferred = require("simply-deferred").Deferred;
 
 var assert = buster.assertions.assert;
 var refute = buster.assertions.refute;
-var CLASSNAME = 'someClassName';
 var ID = 'someModelId';
 var PROP = 'foo';
 var VAL = 'bar';
@@ -29,13 +28,13 @@ buster.testCase('Read Model', {
 
         var model = Backbone.Model.extend({
             urlRoot: '/someUrl',
-            sync: new bls(this.sync, CLASSNAME)
+            sync: new bls(this.sync)
         });
         this.model = new model({ id: ID });
     },
 
     "Requests model from backend if no entry in the localStorage": function () {
-        this.model.sync =  new bls(this.sync, CLASSNAME);
+        this.model.sync =  new bls(this.sync);
 
         this.model.fetch();
 
@@ -46,7 +45,7 @@ buster.testCase('Read Model', {
     "Return model from localStorage": function (done) {
         populateLocalStorage();
         var model = this.model;
-        model.sync =  new bls(this.sync, CLASSNAME);
+        model.sync =  new bls(this.sync);
 
         refute.defined(model.get(PROP));
         model.fetch().done(function (result) {
@@ -61,7 +60,7 @@ buster.testCase('Read Model', {
         var model = this.model;
         var deferred = new Deferred();
         var sync = function () { return deferred; };
-        model.sync =  new bls(sync, CLASSNAME);
+        model.sync =  new bls(sync);
 
         model.fetch();
         deferred.resolve({foo: ALTVAL});
@@ -73,7 +72,7 @@ buster.testCase('Read Model', {
 
     "Doesn't request from backend if alwaysUpdate is off": function () {
         populateLocalStorage();
-        this.model.sync =  new bls(this.sync, CLASSNAME, {alwaysUpdate: false});
+        this.model.sync =  new bls(this.sync, '', {alwaysUpdate: false});
 
         this.model.fetch();
 
