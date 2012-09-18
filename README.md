@@ -8,20 +8,20 @@ An extension to **Backbone** providing localStorage caching for sync operations
 
 # TODO
 * Test usage examples
-* Implement Read Collections
 * Implement Create
 * Implement Update
 * Implement Delete
 
 # API
 
-    Backbone.localStorageSync(originalSyncLayer, uniqueName, options)
+    Backbone.localStorageSync(originalSyncLayer, uniqueNameForCollections, options)
 
 ## Configuration Options
 The provided values are the defaults.
 
     {
-        alwaysUpdate: true //Fetch the model from original Sync even if it was available in the localStorage
+        alwaysUpdate: true, //Fetch the model from original Sync even if it was available in the localStorage
+        prefix: '' //Used in front of all localStorage keys
     }
 
 ## Usage
@@ -30,24 +30,34 @@ The provided values are the defaults.
 
     require(['backbone', 'backbone.localstoragesync'], function(Backbone, localStorageSync) {
         var model = new Backbone.Model({
-            sync: new localStorageSync(Backbone.sync, 'testModel')
+            sync: new localStorageSync(Backbone.sync)
         });
 
         model.fetch().done(function () {
             //Use as normal
         });
+
+        var collection = new Backbone.Collection({
+            sync: new localStorageSync(Backbone.sync, 'MyCollection')
+        });
+        collection.fetch();
     });
 
 ### Without RequireJS
 Add the `script` after Backbone. Then you get a global as `Backbone.localStorageSync` and can use it like this:
 
     var model = new Backbone.Model({
-        sync: new Backbone.localStorageSync(Backbone.sync, 'testModel')
+        sync: new Backbone.localStorageSync(Backbone.sync)
     });
 
     model.fetch().done(function () {
         //Use as normal
     });
+
+    var collection = new Backbone.Collection({
+        sync: new localStorageSync(Backbone.sync, 'MyCollection')
+    });
+    collection.fetch();
 
 
 ## Dependencies
