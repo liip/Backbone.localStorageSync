@@ -1,6 +1,8 @@
 (function(root, factory) {
-    if (typeof require === 'function' && typeof define !== 'function') {
-        var define = require('amdefine')(module);
+    if (typeof require === 'function') { //Has to be like this so the require.js optimizer will strip it out see http://requirejs.org/docs/node.html#nodeModules
+        if (typeof define !== 'function') {
+            var define = require('amdefine')(module);
+        }
     }
 
     if (typeof define === 'function' && define.amd) {
@@ -41,6 +43,19 @@
         }
 
         /**
+         * A helper method since the API is slightly different between node and browser
+         * TODO: Fix this properly in simply-deferred
+         *
+         * @returns Object A new instance of simply deferred that can be used directly
+         **/
+        function getDeferred() {
+            if (_.isFunction(Deferred)) {
+                return new Deferred();
+            }
+            return new Deferred.Deferred();
+        }
+
+        /**
          * Used to crate a completely qualified name to store and retreive from the local storage
          *
          * @param Mixed Can be a model or a string that you want to have the name for.
@@ -75,7 +90,7 @@
         }
 
         function find(model, options) {
-            var deferred = new Deferred.Deferred();
+            var deferred = getDeferred();
             var item = getItem(model);
             var needsFetch = true;
 
@@ -101,7 +116,7 @@
         }
 
         function findAll(collection, options) {
-            var deferred = new Deferred.Deferred();
+            var deferred = getDeferred();
             var ids = getItem(collection);
             var needsFetch = true;
 
