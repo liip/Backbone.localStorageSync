@@ -139,7 +139,13 @@
             if (needsFetch) {
                 var originalReturn = originalSync('read', collection, options);
                 originalReturn.done(function (result) {
-                    collection.reset(result);
+                    var models = [];
+                    _.each(result, function (model) {
+                        model = new collection.model(model);
+                        models.push(model);
+                        setItem(model);
+                    });
+                    collection.reset(models);
                     setItem(_.compact(collection.pluck('id')));
                 });
 

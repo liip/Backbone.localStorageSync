@@ -72,6 +72,7 @@ buster.testCase('Read Model', {
         assert.equals(collection.length, 1);
         assert.equals(collection.get(ID + '2').toJSON(), ALTMODEL.toJSON());
         assert.equals(localStorage.getItem(CLASSNAME), JSON.stringify([ID + '2']));
+        assert.equals(localStorage.getItem(ID + '2'), JSON.stringify(ALTMODEL.toJSON()));
     },
 
 
