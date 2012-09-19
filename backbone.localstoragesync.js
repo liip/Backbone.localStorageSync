@@ -82,10 +82,10 @@
         }
 
         function setItem(model) {
-            if (model.id) {
+            if (!_.isUndefined(model.id)) {
                 localStorage.setItem(getName(model), JSON.stringify(model.toJSON()));
             } else {
-                localStorage.setItem(getName({}), JSON.stringify(model));
+                localStorage.setItem(getName(model), JSON.stringify(model));
             }
         }
 
@@ -135,7 +135,7 @@
                 var originalReturn = originalSync('read', collection, options);
                 originalReturn.done(function (result) {
                     collection.reset(result);
-                    setItem(collection, collection.pluck('id'));
+                    setItem(_.compact(collection.pluck('id')));
                 });
 
                 //If we couldn't return anything from the cache resolve when the original sync layer does.
