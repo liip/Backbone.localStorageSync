@@ -124,7 +124,12 @@
             if (null !== ids) {
                 var models = [];
                 _.map(ids, function (id) {
-                    models.push(new collection.model(getItem(id)));
+                    var model = getItem(id);
+                    if (model) {
+                        models.push(new collection.model(model));
+                    } else {
+                        models.push(new collection.model({id: id}));
+                    }
                 });
                 collection.reset(models);
                 deferred.resolve(models);

@@ -82,5 +82,18 @@ buster.testCase('Read Model', {
         this.collection.fetch();
 
         refute.called(this.sync);
+    },
+
+    "Creates empty model if not in localstorage": function (done) {
+        localStorage.setItem(CLASSNAME, JSON.stringify([ID]));
+        var collection = this.collection;
+        collection.sync = new bls(this.sync, CLASSNAME);
+
+        collection.fetch().done(function () {
+            assert.equals(1, collection.length);
+            assert(collection.get(ID));
+            done();
+        });
+
     }
 });
