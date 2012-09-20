@@ -22,7 +22,7 @@ function populateLocalStorage() {
     localStorage.setItem(ID, JSON.stringify(MODEL.toJSON()));
 }
 
-buster.testCase('Read Model', {
+buster.testCase('Read Collection', {
     setUp: function () {
         localStorage = require('localStorage');
         localStorage.clear();

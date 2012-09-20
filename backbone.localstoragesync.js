@@ -55,6 +55,18 @@
             return new Deferred.Deferred();
         }
 
+        /** A helper that checks if it has an ID
+         *
+         * @param Object The object that you want to test.
+         * @returns Bool True if it has an ID, False otherwise.
+         **/
+        function hasId(model) {
+            if (_.isUndefined(model.get) || _.isUndefined(model.get('id'))) {
+                return false;
+            }
+            return true;
+        }
+
         /**
          * Used to crate a completely qualified name to store and retreive from the local storage
          *
@@ -65,10 +77,10 @@
             var ret = config.prefix;
             if (_.isString(name)) {
                 return ret + name;
-            } else if (_.isUndefined(name.id)) {
+            } else if (! hasId(name)) {
                 return ret + className;
             }
-            return ret + name.id;
+            return ret + name.get('id');
         }
 
         /**
@@ -82,7 +94,7 @@
         }
 
         function setItem(model) {
-            if (!_.isUndefined(model.id)) {
+            if (hasId(model)) {
                 localStorage.setItem(getName(model), JSON.stringify(model.toJSON()));
             } else {
                 localStorage.setItem(getName(model), JSON.stringify(model));
@@ -181,7 +193,7 @@
 
             switch (method) {
                 case 'read':
-                    if (_.isUndefined(model.id)) {
+                    if (! hasId(model)) {
                         operation = findAll(model, options);
                     } else {
                         operation = find(model, options);

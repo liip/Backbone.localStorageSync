@@ -1,6 +1,6 @@
 {
   "name": "backbone.localstoragesync",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "author": "Liip <contact@liip.ch>",
   "description": "A caching layer between the client and server.",
   "contributors": [ 
